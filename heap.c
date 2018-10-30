@@ -1,4 +1,8 @@
-#include <>
+#include "heap.h"
+#include <stdbool.h>
+#include <stddef.h>
+
+#define TAM 30
 
 /* ******************************************************************
  *                DEFINICION DE LOS TIPOS DE DATOS
@@ -15,7 +19,11 @@ struct heap{
   *                      PRIMITIVAS PRIVADAS
   * *****************************************************************/
 
- void swap();
+void swap(void** elem_1, void** elem_2){
+	void* aux = *elem_1;
+	*elem_1 = *elem_2;
+	*elem_2 = aux;
+}
 
  /* ******************************************************************
  *                      PRIMITIVAS DEL HEAP
@@ -23,40 +31,38 @@ struct heap{
 
 heap_t *heap_crear(cmp_func_t cmp){
 	if(!cmp) return NULL;
+
 	heap_t * heap = malloc(sizeof(heap_t));
 	if(!heap) return NULL;
+
 	void** tabla = malloc(sizeof(void*)*TAM);
 	if(!tabla){
 		free(heap);
 		return NULL;
 	}
+
 	heap->tabla = tabla;
 	heap->cmp = cmp;
 	
 	return heap;
 } 
 
-/*
- * Constructor alternativo del heap. Además de la función de comparación,
- * recibe un arreglo de valores con que inicializar el heap. Complejidad
- * O(n).
- *
- * Excepto por la complejidad, es equivalente a crear un heap vacío y encolar
- * los valores de uno en uno
-*/
+// Heapify
 heap_t *heap_crear_arr(void *arreglo[], size_t n, cmp_func_t cmp){
+	if(!cmp) return NULL;
 
-}
-
-void heap_destruir(heap_t *heap, void destruir_elemento(void *e)){
+	heap_t * heap = malloc(sizeof(heap_t));
+	if(!heap) return NULL;
 	
-	if(destruir_elemento){
-		for(size_t i=0; i<cantidad; i++){
-			destruir_elemento(heap->tabla[i]);
-		}
-	}
-	free(heap->tabla);
-	free(heap);
+	void** tabla = malloc(sizeof(void*)*n);
+	if(!tabla){
+		free(heap);
+		return NULL;
+	}	
+
+	//Copiar arreglo y hacer heapify
+	
+	return heap;
 }
 
 size_t heap_cantidad(const heap_t *heap){
@@ -67,20 +73,34 @@ bool heap_esta_vacio(const heap_t *heap){
 	return !heap->cantidad;
 }
 
+void up_heap(heap_t *heap, int pos){
+	int padre = (pos-1)/2;
+	if ( (padre < 0) || (heap->cmp(heap[pos], heap[padre])<0) ) return;
 
-void up_heap(heap_t *heap, size_t posicion){
-	size_t padre = (posicion-1)/2;
-	if(padre < 0) return;
-	if(cmp(padre, posicion)<0) swap(heap, padre, hijo);
+	swap(&heap[pos], &heap[padre]);
 	up_heap(heap, padre);
 }
 
-void down_heap(heap_t* heap, size_t pos){
-	size_t hijo_izq = 2i+1;
-	size_t hijo_der = 2i+2;
-	if(hijo_izq<capacidad && heap->cmp(heap->tabla[pos], heap->tabla[hijo_izq]) < 0){
-		swap(heap, hijo);
+void down_heap(heap_t* heap, int pos){
+	int hijo_izq = (2*pos) + 1;
+	int hijo_der = (2*pos) + 2;
+
+	if ( (hijo_der < heap->cantidad) && (heap->cmp(heap[pos], heap[hijo_der]) < 0) ){
+		if( heap->cmp(heap[hijo_izq], heap[hijo_der]) > 0 ){
+			swap(&heap[pos], &heap[hijo_izq]);
+			down_heap(heap, hijo_izq);
+		}
+		else{
+			swap(&heap[pos], &heap[hijo_der]);
+			down_heap(heap, hijo_der);
+		}
 	}
+	else if ( (hijo_izq < heap->cantidad) && (heap->cmp(heap[pos], heap[hijo_izq]) < 0) ){
+		swap(&heap[pos], &heap[hijo_izq]);
+		down_heap(heap, hijo_izq);
+	}
+
+	return;
 }
 
 bool heap_encolar(heap_t *heap, void *elem){
@@ -91,14 +111,29 @@ bool heap_encolar(heap_t *heap, void *elem){
 }
 
 void *heap_ver_max(const heap_t *heap){
+	if (heap_esta_vacio(heap)) return NULL;
 	return heap->tabla[0];
 }
 
 void *heap_desencolar(heap_t *heap){
+
 	void* dato = heap->tabla[0];
-	swap(heap, 0, capacidad-1);
+	swap(&heap[0], &heap[capacidad-1]);
+
 	capacidad--;
 	down_heap(heap, 0);
+}
+
+void heap_destruir(heap_t *heap, void destruir_elemento(void *e)){
+	
+	if(destruir_elemento){
+		for(size_t i=0; i<cantidad; i++){
+			destruir_elemento(heap->tabla[i]);
+		}
+	}
+
+	free(heap->tabla);
+	free(heap);
 }
 
 ///
