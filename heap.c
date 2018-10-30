@@ -1,5 +1,8 @@
-typedef struct heap heap_t; 
-typedef int (*cmp_func_t) (const void *a, const voiad *b);
+#include <>
+
+/* ******************************************************************
+ *                DEFINICION DE LOS TIPOS DE DATOS
+ * *****************************************************************/
 
 struct heap{
 	void** tabla;
@@ -7,6 +10,16 @@ struct heap{
 	size_t capacidad;
 	cmp_func_t cmp;
 };
+
+ /* ******************************************************************
+  *                      PRIMITIVAS PRIVADAS
+  * *****************************************************************/
+
+ void swap();
+
+ /* ******************************************************************
+ *                      PRIMITIVAS DEL HEAP
+ * *****************************************************************/
 
 heap_t *heap_crear(cmp_func_t cmp){
 	if(!cmp) return NULL;
@@ -23,7 +36,17 @@ heap_t *heap_crear(cmp_func_t cmp){
 	return heap;
 } 
 
-heap_t *heap_crear_arr(void *arreglo[], size_t n, cmp_func_t cmp); 
+/*
+ * Constructor alternativo del heap. Además de la función de comparación,
+ * recibe un arreglo de valores con que inicializar el heap. Complejidad
+ * O(n).
+ *
+ * Excepto por la complejidad, es equivalente a crear un heap vacío y encolar
+ * los valores de uno en uno
+*/
+heap_t *heap_crear_arr(void *arreglo[], size_t n, cmp_func_t cmp){
+
+}
 
 void heap_destruir(heap_t *heap, void destruir_elemento(void *e)){
 	
@@ -56,7 +79,7 @@ void down_heap(heap_t* heap, size_t pos){
 	size_t hijo_izq = 2i+1;
 	size_t hijo_der = 2i+2;
 	if(hijo_izq<capacidad && heap->cmp(heap->tabla[pos], heap->tabla[hijo_izq]) < 0){
-		swap(heap, hijo)
+		swap(heap, hijo);
 	}
 }
 
@@ -77,3 +100,8 @@ void *heap_desencolar(heap_t *heap){
 	capacidad--;
 	down_heap(heap, 0);
 }
+
+///
+// Heap Sort
+///
+void heap_sort(void *elementos[], size_t cant, cmp_func_t cmp);
