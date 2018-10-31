@@ -86,4 +86,3 @@ void heap_sort(void *elementos[], size_t cant, cmp_func_t cmp);
 void pruebas_heap_alumno(void);
 
 #endif // HEAP_H
-
