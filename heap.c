@@ -43,6 +43,7 @@ void swap(void** elem_1, void** elem_2){
 }
 
 void up_heap(heap_t *heap, int pos){
+	if(!pos) return;
 	int padre = (pos-1)/2;
 	if((padre < 0) || (heap->cmp(heap->tabla[pos], heap->tabla[padre])<0)) return;
 
@@ -114,7 +115,7 @@ heap_t *heap_crear_arr(void *arreglo[], size_t n, cmp_func_t cmp){
 		heap->cantidad++;
 	}
 	for(size_t i=n-1; i >=0; i--){
-		down_heap(heap->tabla[i], (int)i); //Aplico desde las hojas (ultimas pos del vector) hasta la raiz (primera pos)
+		down_heap(heap, (int)i); //Aplico desde las hojas (ultimas pos del vector) hasta la raiz (primera pos)
 	}
 	return heap;
 }
@@ -123,8 +124,8 @@ heap_t *heapify(void *arreglo[], size_t n, cmp_func_t cmp){
 	if(!heap) return NULL;
 	heap->tabla = arreglo;
 	heap->cantidad = n;
-	for(size_t i=n-1; i >=0; i--){
-		down_heap(heap->tabla[i], (int)i); //Aplico desde las hojas (ultimas pos del vector) hasta la raiz (primera pos)
+	for(size_t i=n-1; i >0; i--){
+		down_heap(heap, (int)i); //Aplico desde las hojas (ultimas pos del vector) hasta la raiz (primera pos)
 	}
 	return heap;
 }
@@ -156,6 +157,7 @@ void *heap_ver_max(const heap_t *heap){
 
 void *heap_desencolar(heap_t *heap){
 
+	if(heap_esta_vacio(heap)) return NULL;
 	void* dato = heap->tabla[0];
 	swap(&heap->tabla[0], &heap->tabla[heap->cantidad-1]);
 
@@ -187,8 +189,8 @@ void heap_sort(void *elementos[], size_t cant, cmp_func_t cmp){
 	heap_t *heap = heapify(elementos, cant, cmp);
 	if(!heap) return;
 	size_t i = heap->cantidad;
-	while(i>1){
-		swap(heap->tabla[0], heap->tabla[i]);
+	while(i>2){
+		swap(heap->tabla[0], heap->tabla[i-1]);
 		down_heap(heap, 0);
 		i--;
 	}
