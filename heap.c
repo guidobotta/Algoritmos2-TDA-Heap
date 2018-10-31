@@ -108,16 +108,16 @@ heap_t *heapify(void *arreglo[], size_t n, cmp_func_t cmp){
 	heap->tabla = arreglo;
 	heap->cmp = cmp;
 	heap->cantidad = n;
-	heap->capacidad = n;
+	heap->capacidad = n+1;
 
-	for(size_t i=n-1; i > 0; i--){
-		down_heap(heap, (int)i); //Aplico desde las hojas (ultimas pos del vector) hasta la raiz (primera pos)
+	for(int i=(int)n-1; i >= 0; i--){
+		down_heap(heap, i); //Aplico desde las hojas (ultimas pos del vector) hasta la raiz (primera pos)
 	}
 	return heap;
 }
 
 heap_t *heap_crear_arr(void *arreglo[], size_t n, cmp_func_t cmp){
-	
+
 	void** tabla = malloc(sizeof(void*)*n);
 	if(!tabla) return NULL;
 
@@ -180,17 +180,12 @@ void heap_destruir(heap_t *heap, void destruir_elemento(void *e)){
 ///
 // Heap Sort
 ///
-#include <stdio.h>
 void heap_sort(void *elementos[], size_t cant, cmp_func_t cmp){
 	heap_t *heap = heapify(elementos, cant, cmp);
 	if(!heap) return;
-	for(size_t i = cant; i>0; i--){
-		    printf("\n{");
-		for(int i=0; i<cant; i++){
-			printf("%d, ", *(int*)elementos[i]);
-		}
-		printf("}\n");
-		swap(&heap->tabla[0], &heap->tabla[i-1]);
+	for(int i=(int)cant-1; i>=0; i--){
+		swap(&heap->tabla[0], &heap->tabla[i]);
+		heap->cantidad--;
 		down_heap(heap, 0);
 	}
 	free(heap);

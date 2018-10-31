@@ -11,6 +11,13 @@ int funcion_comparacion_enteros(const void *a, const void *b){
     return 0;
 }
 
+bool esta_ordenado(void **arreglo, size_t tope){
+    for(size_t i=0; i<tope-1; i++){
+        if(*(int*)arreglo[i] > *(int*)arreglo[i+1]) return false;
+    }
+    return true;
+}
+
 void pruebas_sencillas(){
     heap_t *heap = heap_crear(funcion_comparacion_enteros);
     if(!heap) return;
@@ -77,18 +84,14 @@ void pruebas_volumen(){
 
 void pruebas_heapsort(){
     srand((unsigned int)time(NULL));
-    int tope = 15;
+    int tope = 50;
     void **vector = malloc(sizeof(void*)*tope);
     for(int i=0; i<tope; i++){
         vector[i] = malloc(sizeof(void*));
-        *(int*)vector[i] = rand() % 100;
+        *(int*)vector[i] = rand() % 200;
     }
     heap_sort(vector, tope, funcion_comparacion_enteros);
-    printf("\n{");
-    for(int i=0; i<tope; i++){
-        printf("%d, ", *(int*)vector[i]);
-    }
-    printf("}\n");
+    print_test("El arreglo esta ordenado", esta_ordenado(vector, tope));
     for(int i=0; i<tope; i++){
         free(vector[i]);
     }
@@ -101,6 +104,6 @@ void pruebas_heap_alumno(){
     printf("\n~~~~PRUEBAS DE VOLUMEN~~~~\n");
     pruebas_volumen();
 //    pruebas_heapify();
-printf("\n~~~~PRUEBAS HEAPSORT~~~~\n");
+    printf("\n~~~~PRUEBAS HEAPSORT~~~~\n");
     pruebas_heapsort();
 }
