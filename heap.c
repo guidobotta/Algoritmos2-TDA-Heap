@@ -79,13 +79,13 @@ void down_heap(heap_t* heap, int pos){
 
 
 
-heap_t *_heap_crear_(cmp_func_t cmp, size_t tam){
+heap_t *heap_crear(cmp_func_t cmp){
 	if(!cmp) return NULL;
 
 	heap_t * heap = malloc(sizeof(heap_t));
 	if(!heap) return NULL;
 
-	void** tabla = malloc(sizeof(void*)*tam);
+	void** tabla = malloc(sizeof(void*)*TAM);
 	if(!tabla){
 		free(heap);
 		return NULL;
@@ -94,42 +94,34 @@ heap_t *_heap_crear_(cmp_func_t cmp, size_t tam){
 	heap->tabla = tabla;
 	heap->cmp = cmp;
 	heap->cantidad = 0;
-	heap->capacidad = tam;
-
-	return heap;
-}
-heap_t *heap_crear(cmp_func_t cmp){
-
-	heap_t * heap = _heap_crear_(cmp, TAM);
-	if(!heap) return NULL;
+	heap->capacidad = TAM;
 
 	return heap;
 }
 
 // Heapify
-heap_t *heap_crear_arr(void *arreglo[], size_t n, cmp_func_t cmp){
 
-	heap_t * heap = _heap_crear_(cmp, n);
+heap_t *heapify(void *arreglo[], size_t n, cmp_func_t cmp){
+	heap_t* heap = malloc(sizeof(heap_t));
 	if(!heap) return NULL;
 
-	for(size_t i=0; i<n; i++){
-		heap->tabla[i] = arreglo[i];
-		heap->cantidad++;
-	}
-	
-	for(size_t i=n-1; i >=0; i--){
+	heap->tabla = arreglo;
+	heap->cmp = cmp;
+	heap->cantidad = n;
+	heap->capacidad = n;
+
+	for(size_t i=n-1; i > 0; i--){
 		down_heap(heap, (int)i); //Aplico desde las hojas (ultimas pos del vector) hasta la raiz (primera pos)
 	}
 	return heap;
 }
-heap_t *heapify(void *arreglo[], size_t n, cmp_func_t cmp){
-	heap_t * heap = _heap_crear_(cmp, n);
-	if(!heap) return NULL;
-	heap->tabla = arreglo;
-	heap->cantidad = n;
-	for(size_t i=n-1; i >0; i--){
-		down_heap(heap, (int)i); //Aplico desde las hojas (ultimas pos del vector) hasta la raiz (primera pos)
-	}
+
+heap_t *heap_crear_arr(void *arreglo[], size_t n, cmp_func_t cmp){
+	
+	void** tabla = malloc(sizeof(void*)*n);
+	if(!tabla) return NULL;
+
+	heap_t* heap = heapify(arreglo, n, cmp);
 	return heap;
 }
 
@@ -188,14 +180,18 @@ void heap_destruir(heap_t *heap, void destruir_elemento(void *e)){
 ///
 // Heap Sort
 ///
+#include <stdio.h>
 void heap_sort(void *elementos[], size_t cant, cmp_func_t cmp){
 	heap_t *heap = heapify(elementos, cant, cmp);
 	if(!heap) return;
-	size_t i = heap->cantidad;
-	while(i>2){
-		swap(heap->tabla[0], heap->tabla[i-1]);
+	for(size_t i = cant; i>0; i--){
+		    printf("\n{");
+		for(int i=0; i<cant; i++){
+			printf("%d, ", *(int*)elementos[i]);
+		}
+		printf("}\n");
+		swap(&heap->tabla[0], &heap->tabla[i-1]);
 		down_heap(heap, 0);
-		i--;
 	}
 	free(heap);
 }
