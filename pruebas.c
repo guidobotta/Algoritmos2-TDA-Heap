@@ -9,7 +9,7 @@ int funcion_comparacion_enteros(const void *a, const void *b){
     if(*(int*)a < *(int*)b) return -1;
     return 0;
 }
-print_test("Veo el elemento mayor", heap_ver_max(heap) == NULL);
+
 void pruebas_sencillas(){
     heap_t *heap = heap_crear(funcion_comparacion_enteros);
     if(!heap) return;

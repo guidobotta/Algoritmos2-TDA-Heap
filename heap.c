@@ -107,12 +107,15 @@ heap_t *heap_crear(cmp_func_t cmp){
 
 // Heapify
 heap_t *heap_crear_arr(void *arreglo[], size_t n, cmp_func_t cmp){
+
 	heap_t * heap = _heap_crear_(cmp, n);
 	if(!heap) return NULL;
+
 	for(size_t i=0; i<n; i++){
 		heap->tabla[i] = arreglo[i];
 		heap->cantidad++;
 	}
+	
 	for(size_t i=n-1; i >=0; i--){
 		down_heap(heap->tabla[i], (int)i); //Aplico desde las hojas (ultimas pos del vector) hasta la raiz (primera pos)
 	}

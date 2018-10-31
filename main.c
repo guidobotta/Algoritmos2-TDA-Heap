@@ -12,12 +12,12 @@ void pruebas_heap_volumen_catedra(size_t, bool);
 
 int main(int argc, char *argv[])
 {
-    if (argc > 1) {
+    /*if (argc > 1) {
         // Asumimos que nos están pidiendo pruebas de volumen.
         long largo = strtol(argv[1], NULL, 10);
         pruebas_heap_volumen_catedra((size_t) largo, false);
         return 0;
-    }
+    }*/
 
     printf("~~~ PRUEBAS ALUMNO ~~~\n");
     pruebas_heap_alumno();
