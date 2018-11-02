@@ -74,10 +74,8 @@ void down_heap(heap_t* heap, int pos){
 }
 
  /* ******************************************************************
- *                      PRIMITIVAS DEL HEAP
- * *****************************************************************/
-
-
+  *                      PRIMITIVAS DEL HEAP
+  * *****************************************************************/
 
 heap_t *heap_crear(cmp_func_t cmp){
 	if(!cmp) return NULL;
@@ -121,7 +119,11 @@ heap_t *heap_crear_arr(void *arreglo[], size_t n, cmp_func_t cmp){
 	void** tabla = malloc(sizeof(void*)*n);
 	if(!tabla) return NULL;
 
-	heap_t* heap = heapify(arreglo, n, cmp);
+	for(int i=0; i<n; i++){
+		tabla[i] = arreglo[i];
+	}
+
+	heap_t* heap = heapify(tabla, n, cmp);
 	return heap;
 }
 

@@ -4,6 +4,10 @@
 #include <stdbool.h>  /* bool */
 #include <stddef.h>	  /* size_t */
 
+/* ******************************************************************
+ *                DEFINICION DE LOS TIPOS DE DATOS
+ * *****************************************************************/
+
 /* Prototipo de función de comparación que se le pasa como parámetro a las
  * diversas funciones del heap.
  * Debe recibir dos punteros del tipo de dato utilizado en el heap, y
@@ -13,7 +17,6 @@
  *   mayor a 0  si  a > b
  */
 typedef int (*cmp_func_t) (const void *a, const void *b);
-
 
 /*
  * Implementación de un TAD cola de prioridad, usando un max-heap.
@@ -25,6 +28,10 @@ typedef int (*cmp_func_t) (const void *a, const void *b);
 
 /* Tipo utilizado para el heap. */
 typedef struct heap heap_t;
+
+ /* ******************************************************************
+  *                      PRIMITIVAS DEL HEAP
+  * *****************************************************************/
 
 /* Crea un heap. Recibe como único parámetro la función de comparación a
  * utilizar. Devuelve un puntero al heap, el cual debe ser destruido con
